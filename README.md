@@ -2,8 +2,7 @@
 RPi-powered slow cooker &amp; yoghurt maker
 
 The slow cooker uses the following physical components:
-
-  Raspberry Pi 3,  
+  Raspberry Pi 3,
   DS18B20 Waterproof Thermal Temperature Sensor,
   PowerSwitch Tail Kit 240v,
   CrockPot,
