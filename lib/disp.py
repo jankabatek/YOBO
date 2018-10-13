@@ -36,7 +36,7 @@ def PRNT_MENU(num,text):
     y = 2
 
     # Write output
-    draw.text((x,y), 'Choose the program: ',  font=ImageFont.load_default(), fill=255)
+    draw.text((x,y), 'Choooose the program: ',  font=ImageFont.load_default(), fill=255)
     draw.text((x,y+14), '(' + str(num) +') ' + text ,  font=ImageFont.load_default(), fill=255)
 
     # Display image.
