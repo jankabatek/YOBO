@@ -1,4 +1,5 @@
 #import modules
+import math
 import time
 import RPi.GPIO as GPIO         #temp.sensor
 from lib import disp			#display parameters and functions
@@ -52,7 +53,7 @@ try:
         print (time_dif)
 
         # display the output
-        time_rem = floor( (time_cap - time_dif)/6 )/10
+        time_rem = math.ceil( (time_cap - time_dif)/6 )/10
         disp.PRNT_TEMP(temperature,time_rem)
 
         if temperature < 44:	#change this value to adjust the 'too cold' threshold

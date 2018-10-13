@@ -40,11 +40,11 @@ try:
     print("The choice menu")
     
     for i in i_pool:
-        print lst[int(i)]
-        raw_input("Press Enter to continue...")
+        print str(lst[int(i)])
         # input("Press Enter to continue...")
         j = int(i+1)    
-        disp.PRNT_MENU(j,'Yog 6hrs')
+        disp.PRNT_MENU(j,str(lst[int(i)]))
+        raw_input("Press Enter to continue...")
     
     # while GPIO.input(BTN) == GPIO.LOW: # Run forever
         # time.sleep(0.1)
