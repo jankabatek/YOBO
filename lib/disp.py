@@ -55,7 +55,7 @@ def PRNT_BUTPRES():
     
     # Write output
     draw.text((x,y), 'The time has come to ',  font=ImageFont.load_default(), fill=255)
-    draw.text((x+10,y+14), '!..push the button!',  font=ImageFont.load_default(), fill=255)
+    draw.text((x+10,y+14), '..push the button!',  font=ImageFont.load_default(), fill=255)
 
     # Display image.
     disp.image(image)
