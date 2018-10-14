@@ -26,6 +26,18 @@ draw = ImageDraw.Draw(image)
 #Load default font.
 font = ImageFont.load_default()
 
+
+#############################################################
+# SILLY LOGO
+def PRNT_LOGO():
+    draw.rectangle((0,0,width,height), outline=0, fill=0)
+    
+    # Load image based on OLED display height.  Note that image is converted to 1 bit color.
+    image = Image.open('JK_ind_32.ppm').convert('1')
+    # Display image.
+    disp.image(image)
+    disp.display()
+
 #############################################################
 # TEMPERATURE & TIME OUTPUT
 def PRNT_MENU(num,text):
