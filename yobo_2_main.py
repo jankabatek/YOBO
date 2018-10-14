@@ -2,7 +2,7 @@
 import math
 import time
 import RPi.GPIO as GPIO         #temp.sensor
-from lib import disp			#display parameters and functions
+from lib import disp			#display parameters and functions 
 
 #pin definitions
 ledR = 13                       #led lights
