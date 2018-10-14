@@ -1,8 +1,10 @@
 #import modules
 import time
 import RPi.GPIO as GPIO         #temp.sensor
-from lib import disp			#display parameters and functions
+from lib import disp		#display parameters and functions
+from lib import prog
 from itertools import cycle     #cycling loop tool
+from gpiozero import Button
 
 #pin definitions
 ledR = 13                       #led lights
@@ -28,32 +30,62 @@ GPIO.output(ledR, 0)
 GPIO.output(ledG, 0)
 GPIO.output(ledB, 0)
 
-GPIO.output(PWR, False)
+#GPIO.output(PWR, False)
 
+butt1 = Button(BT1, pull_up=False,hold_repeat=False)
+butt2 = Button(BT2, pull_up=False,hold_repeat=False)
+
+#button functions
+##b1 = 0
+##b2 = 0
+##def button_callback(channel):
+##    global b1
+##    b1 = b1 + 1
+##    print("Button 1 was pushed!" + str(b1))
+##    time.sleep(0.1)
+##    
+##def button_callback2(channel):
+##    global b2
+##    b2 += 1
+##    print("Button 2 was pushed!" + str(b2))
+##
+##GPIO.add_event_detect(BT1,GPIO.RISING,callback=button_callback)
+##GPIO.add_event_detect(BT2,GPIO.RISING,callback=button_callback2)
+
+#menu options
 lst = ['Yog', 'Other', 'Misc']
-lst2 = [1,2,3]
-
-i_list = [0,1,2]
-i_pool = cycle(i_list)
-
+n_l = len(lst) 
 
 #main loop
 try:
+    # first, select the cooking program from the choice menu.
+    i = 0 
     print("The choice menu")
-    while GPIO.input(BT1) == GPIO.LOW
-        
-        for i in i_pool:
-            print str(lst[int(i)])
-            # input("Press Enter to continue...")
-            j = int(i)    
-            disp.PRNT_MENU(j,str(lst[int(i)]))
-            raw_input("Press Enter to continue...")
-        
-    # while GPIO.input(BTN) == GPIO.LOW: # Run forever
-        # time.sleep(0.1)
-    print j
-         
+    disp.PRNT_MENU(1,str(lst[i]))
+    print 'Current choice: 1'
 
+    while butt2.is_pressed == False:
+        if butt1.is_pressed:
+            i = i+1
+            if i >= n_l:
+                i = 0   #revert counter to zero if going out of bounds
+            ch_disp = i + 1
+            print 'Current choice: ' + str(ch_disp)
+            disp.PRNT_MENU(ch_disp,str(lst[i]))
+            butt1.wait_for_release()
+            
+        time.sleep(0.1)
+
+    #once the button 2 is pressed, execute the selected program.
+        
+    print 'lets doooooo it!'
+    prog.cook(ch_disp)
+
+    #for autostart on reboot, put this into cronwrap:
+    #sudo python /home/pi/YOBO/yobo_full.py
+        
 except KeyboardInterrupt:
     GPIO.cleanup()
     print ('Program Exited Cleanly')
+
+#put 

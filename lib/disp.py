@@ -26,7 +26,6 @@ draw = ImageDraw.Draw(image)
 #Load default font.
 font = ImageFont.load_default()
 
-
 #############################################################
 # SILLY LOGO
 def PRNT_LOGO():
@@ -110,34 +109,3 @@ def PRNT_FINISH():
     # Display image.
     disp.image(image)
     disp.display()
-
- #################################
- # MISC - move to another python script.
-def LED_FLICK():
-    GPIO.output(ledR, 0)
-    GPIO.output(ledG, 0)
-    GPIO.output(ledB, 1)
-    time.sleep(0.5)
-    GPIO.output(ledR, 0)
-    GPIO.output(ledG, 1)
-    GPIO.output(ledB, 0)
-    time.sleep(0.5)
-    GPIO.output(ledR, 1)
-    GPIO.output(ledG, 0)
-    GPIO.output(ledB, 0)
-    time.sleep(0.5)
-
-def LED_RED():
-    GPIO.output(ledR, 1)
-    GPIO.output(ledG, 0)
-    GPIO.output(ledB, 0)
-
-def LED_GRE():
-    GPIO.output(ledR, 0)
-    GPIO.output(ledG, 1)
-    GPIO.output(ledB, 0)
-
-def LED_BLU():
-    GPIO.output(ledR, 0)
-    GPIO.output(ledG, 0)
-    GPIO.output(ledB, 1)
