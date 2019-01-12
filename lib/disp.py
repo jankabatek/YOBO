@@ -1,3 +1,4 @@
+# -- coding: cp1252
 import Adafruit_GPIO.SPI as SPI #display
 import Adafruit_SSD1306         #display
 
@@ -7,7 +8,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 
 # pin number
-RST  = 24    
+RST  = 12    
 
 #define the display function
 # 128x32 display with hardware I2C:
@@ -53,6 +54,27 @@ def PRNT_MENU(num,text):
     # Display image.
     disp.image(image)
     disp.display()
+    
+#############################################################
+# TEMPERATURE & TIME OUTPUT
+def PRNT_MENU_MAN(tem,tim):
+    draw.rectangle((0,0,width,height), outline=0, fill=0)
+    
+    # First define some constants to allow easy resizing of shapes.
+    x = 4
+    y = 2
+     
+    # Write output
+    draw.text((x, y),  'Choose the time & temp!',  font=font, fill=255)
+    draw.text((x, y+10), 'Temperature:',  font=font, fill=255)
+    draw.text((x, y+18), 'Time:', font=font, fill=255)
+
+    draw.text((x+80, y+10), str(tem) +'°C',  font=font, fill=255)
+    draw.text((x+80, y+18), str(tim) +' hrs', font=font, fill=255)
+
+    # Display image.
+    disp.image(image)
+    disp.display()
 
 
 #############################################################
@@ -86,7 +108,7 @@ def PRNT_TEMP(tem,tim):
     draw.text((x, y+10), 'Temperature:',  font=font, fill=255)
     draw.text((x, y+18), 'Rem. time:', font=font, fill=255)
 
-    draw.text((x+80, y+10), str(tem) +'C',  font=font, fill=255)
+    draw.text((x+80, y+10), str(tem) +'°C',  font=font, fill=255)
     draw.text((x+80, y+18), str(tim) +' hrs', font=font, fill=255)
 
     # Display image.
@@ -109,3 +131,24 @@ def PRNT_FINISH():
     # Display image.
     disp.image(image)
     disp.display()
+
+    
+#############################################################
+# PRINT ANY TEXT
+def PRNT_TEXT(text1,text2=' ',text3=' '):
+    draw.rectangle((0,0,width,height), outline=0, fill=0)
+    
+    # First define some constants to allow easy resizing of shapes.
+    x = 4
+    y = 4
+     
+    # Write output
+    draw.text((x, y),    str(text1),  font=font, fill=255)
+    draw.text((x, y+10), str(text2),  font=font, fill=255)
+    draw.text((x, y+18), str(text3), font=font, fill=255)
+
+    # Display image.
+    disp.image(image)
+    disp.display()
+
+    

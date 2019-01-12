@@ -10,7 +10,8 @@ import gaugette.rotary_encoder
 import gaugette.switch
 
 #pin definitions
-PWR  = 27                       #power switch
+PWR  = 22                       #power switch
+HUM  = 23
 RST  = 12                       #display
 
 #WPi pin definitions for the rotary encoder (gaugette lib)
@@ -22,6 +23,7 @@ SW_PIN = 3
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(PWR,  GPIO.OUT)
+GPIO.setup(HUM,  GPIO.OUT)
 #GPIO.setup(BTN,  GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 #Rotary initialization
@@ -39,27 +41,25 @@ def cook(ch,tem,tim):
     #default presets:
     time_cap  = 360             # timer is set to 6 hours
     temp_tar  = 44
-    pasteur   = False
+    humi_tar  = 74
 
     if ch ==1:
-        time_cap  = 390  # a bit more than 6 hours - there's a glitch somewhere
-        temp_tar  = 44
-        pasteur   = False
+        time_cap  = 60*48  # 2 days incubation
+        temp_tar  = 30
+        humi_tar  = 74
         
     if ch==2:
         time_cap  = tim*60  
         temp_tar  = tem
-        pasteur   = False
+        humi_tar  = 74
 
     if ch==3:
         time_cap  = 360  
         temp_tar  = 44
-        pasteur   = True
 
     if ch ==4:
         time_cap  = 660  
         temp_tar  = 44
-        pasteur   = False
         GPIO.output(PWR, False)
         time.sleep(60*60*4)
         time_init = time.time()
@@ -78,27 +78,17 @@ def cook(ch,tem,tim):
         time_dif = (time.time() - time_init)/60
         print (time_dif)
 
-        if pasteur == True: #pre-incubation milk pasteurization
-            if temperature < 72:
-                misc.LED_BLU()
-                GPIO.output(PWR, True)
-            else:
-                pasteur = False
-                time_init = time.time() # re-start the timer!
+        if temperature < temp_tar:	#change this value to adjust the 'too cold' threshold
+            GPIO.output(PWR, True)
 
-        else: # ready-steady-cook!
-            if temperature < temp_tar:	#change this value to adjust the 'too cold' threshold
-                misc.LED_BLU()
-                GPIO.output(PWR, True)
+        if temperature > temp_tar:	#change these values to adjust the 'comfortable' range
+            GPIO.output(PWR, False)
 
-            if temperature > temp_tar and temperature < (temp_tar+1):	#change these values to adjust the 'comfortable' range
-                misc.LED_GRE() 
-                GPIO.output(PWR, False)
+        if humidity < humi_tar:	        #humidity control
+            GPIO.setup(HUM,  GPIO.IN)
+        if humidity > humi_tar:
+            GPIO.setup(HUM,  GPIO.OUT)
 
-            if temperature > (temp_tar+1):	#change this value to adjust the 'too hot' threshold
-                misc.LED_RED()
-                GPIO.output(PWR, False)
-            
         # display the output
         time_rem = math.ceil( (time_cap - time_dif)/6 )/10
         disp.PRNT_TEMP(temperature,time_rem)

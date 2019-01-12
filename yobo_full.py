@@ -11,8 +11,8 @@ import gaugette.rotary_encoder
 import gaugette.switch
 
 #GPIO pin definitions for  standard routines
-ledR = 10                       #led lights
-ledG = 24
+ledR = 24                       #led lights
+ledG = 10
 ledB = 25
 PWR  = 27                      #power switch
 RST  = 12                      #display 
@@ -49,20 +49,25 @@ sw = gaugette.switch.Switch(gpio, SW_PIN) #built-in button press
 
 
 #menu options
-lst = ['Yoghurt 6hrs', 'Other', 'Misc']
+lst = ['Yoghurt 6hrs', 'Manual', 'Pasteur 6hrs','4hr delay']
 n_l = len(lst) 
 
 #main loop
 try:
-    # first, select the cooking program from the choice menu.
+    # display welcome logo
     disp.PRNT_LOGO()
     time.sleep(2)
+    # initialize variables
     i = 0
     butt_state = 0
+    man_time = 0.0
+    man_temp = 45        
+    # first, select the cooking program from the choice menu.
     print("The choice menu")
     disp.PRNT_MENU(1,str(lst[i]))
     print ('Current choice: 1')
-
+    ch_disp = 1
+    
     while butt_state == 0:
         delta = encoder.get_cycles()
         butt_state = sw.get_state()
@@ -77,13 +82,43 @@ try:
             print ('Current choice: ' + str(ch_disp))
             disp.PRNT_MENU(ch_disp,str(lst[i]))
             
-            
         time.sleep(0.1)
 
+    #manual program
+    if i==1:
+        print ('MAN')
+        time.sleep(0.5) #temperature setting
+        butt_state = 0
+        while butt_state == 0:
+            delta = encoder.get_cycles()
+            butt_state = sw.get_state()
+            if delta!=0:
+                man_temp = man_temp+(delta)
+            if man_temp <0 :
+                man_temp = 0
+                
+            disp.PRNT_MENU_MAN(man_temp,man_time)
+            time.sleep(0.1)
+            
+        time.sleep(0.5)  # time setting  
+        butt_state = 0 
+        while butt_state == 0:
+            delta = encoder.get_cycles()
+            butt_state = sw.get_state()
+            if delta!=0:
+                man_time = man_time+(float(delta)/2)
+            if man_time <0 :
+                man_time = 0
+               
+            print (str(man_time))
+            disp.PRNT_MENU_MAN(man_temp,man_time)
+            time.sleep(0.1)
+            
     #once the button 2 is pressed, execute the selected program.
+
         
     print ('lets doooooo it!')
-    prog.cook(ch_disp)
+    prog.cook(ch_disp,man_temp,man_time)
 
     #for autostart on reboot, put this into cronwrap:
     #sudo python /home/pi/YOBO/yobo_full.py
